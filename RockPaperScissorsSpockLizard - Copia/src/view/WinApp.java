@@ -1,0 +1,144 @@
+package view;
+import java.awt.BorderLayout;
+
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.Timer;
+import javax.swing.WindowConstants;
+import controller.Round;
+import model.Choice;
+
+public class WinApp {
+	private String playerName;
+	private Round round;
+	private int t;
+	private final JFrame win = new JFrame();
+	private final Container ctx = win.getContentPane();
+	private final JPanel headerPane = new JPanel(),
+		footerPane = new JPanel(),
+		masterPane = new JPanel();
+	private void initialize() {	
+		win.setTitle("Rock Paper Scissors Advance");
+		win.setResizable(false);
+		win.setSize(835, 482);
+		win.setLocationRelativeTo(null);
+		win.setIconImage(Toolkit.getDefaultToolkit().getImage("img/favicon.png"));
+		win.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		ctx.setLayout(new BorderLayout());
+		ctx.add(headerPane, BorderLayout.NORTH);
+		ctx.add(masterPane, BorderLayout.CENTER);
+		ctx.add(footerPane, BorderLayout.SOUTH);
+		WelcomeCtx();
+		win.setVisible(true);
+	}
+	private void erase(int w, int h) {
+		win.setSize(w, h);
+		headerPane.removeAll();
+		headerPane.revalidate();
+		headerPane.repaint();
+		masterPane.removeAll();
+		masterPane.revalidate();
+		masterPane.repaint();
+		footerPane.removeAll();
+		footerPane.revalidate();
+		footerPane.repaint();
+	}
+	private void WelcomeCtx() {
+		erase(300, 130);
+		JLabel title = new JLabel("Insert your name");
+		headerPane.add(title);
+		JTextField choicePlayer = new JTextField();
+		choicePlayer.setPreferredSize(new Dimension(280, 30));
+		masterPane.add(choicePlayer);
+		JButton start = new JButton("Enter");
+		start.addActionListener(e -> {
+			playerName = !choicePlayer.getText().isBlank()
+				? choicePlayer.getText().strip()
+				: "player";
+			System.out.println(playerName);
+			startPlayCtx();
+		});
+		footerPane.add(start);
+	}
+	private void startPlayCtx() {
+		erase(400, 300);
+		JLabel countPane = new JLabel();
+		t = 10;
+		Timer timer = new Timer(1000, e -> {
+			if (t > 0)
+				countPane.setText("%d".formatted(t--));
+			else {
+				round = new Round(Choice.rand(), Choice.rand());
+			//	if(timer.isRunning())
+				//	timer.stop();
+				resultPlayCtx(round);
+			}
+		});
+		headerPane.add(new JLabel("Human vs Robot"));
+		footerPane.add(new JLabel("%s".formatted(round != null ? round : "prima partita")));
+		JPanel choicePane = new JPanel(new GridLayout(2, 3));
+		masterPane.setLayout(new BorderLayout());
+		for (Choice c : Choice.values()) {
+			final ImageIcon img = new ImageIcon("img/%s.png".formatted(c.toString().toLowerCase()));
+			img.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+			final JButton btn = new JButton(img);
+			btn.addActionListener(e -> {
+				round = new Round(c, Choice.rand());
+				if(timer.isRunning())
+					timer.stop();
+				resultPlayCtx(round);
+			});
+			choicePane.add(btn);
+		}
+		final ImageIcon img = new ImageIcon("img/gear.png");
+		img.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		final JButton btn = new JButton(img);
+		btn.addActionListener(e -> {
+			round = new Round(Choice.rand(), Choice.rand());
+			if(timer.isRunning())
+				timer.stop();
+			resultPlayCtx(round);
+		});
+		choicePane.add(btn);
+		masterPane.add(choicePane, BorderLayout.CENTER);
+		masterPane.add(countPane, BorderLayout.EAST);
+	//	timer.start();
+	}
+	private void resultPlayCtx(Round round) {
+		erase(400, 300);
+		System.out.println(round);
+		headerPane.add(new JLabel("%s, It is a %s".formatted(playerName,round.status().toString().toLowerCase())));
+		JButton playAgain = new JButton("Play Again");
+		playAgain.addActionListener(e->startPlayCtx());
+		footerPane.add(playAgain);
+		masterPane.setLayout(new GridLayout(1,5));
+		masterPane.add(new JLabel(new ImageIcon("img/human.png")));
+		masterPane.add(new JLabel(new ImageIcon("img/%s.png".formatted(round.getHuman().toString().toLowerCase()))));
+		masterPane.add(new JLabel(new ImageIcon("img/vs.png")));
+		masterPane.add(new JLabel(new ImageIcon("img/%s.png".formatted(round.getRobot().toString().toLowerCase()))));
+		masterPane.add(new JLabel(new ImageIcon("img/robot.png")));
+	}
+	public WinApp() {
+		initialize();
+	}
+	public static void main(String[] args) {
+		EventQueue.invokeLater(() -> {
+			try {
+				new WinApp();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+	}
+}
