@@ -16,6 +16,12 @@ if(sg == (sc + 1)%5 || sg == (sc + 3)%5) --> il giocatore vince.
 
 Questo ci ha permesso di completare il codice correttamente e di concludere il nostro progetto.
 
+Consulta il nostro log giornaliero per vedere in ordine cronologico il percorso di evoluzione del nostro progetto!
+https://tome.app/james-hetfield/la-trinita-srl-clggpa02j09ihah414c2d2vsl
+
+-Giovanni Rosanova
+-La Trinità SRL.
+
 # ENGLISH
 
 In this project we find the famous game "Sasso Carta Forbici" reinvented with new rules, also integrating two new choices: "Lizard" and "Spock" that make this game more complicated but also more unpredictable.
@@ -32,3 +38,9 @@ So the condition in the if is:
 if(sg == (sc + 1)%5 || sg== (sc + 3)%5) --> the player wins.
 
 This allowed us to complete the code correctly and conclude our project.
+
+See our daily log to see in chronological order the evolution path of our project!
+https://tome.app/james-hetfield/la-trinita-srl-clggpa02j09ihah414c2d2vsl
+
+-Giovanni Rosanova
+-La Trinità SRL.
